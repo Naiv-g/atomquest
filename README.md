@@ -9,7 +9,8 @@
 
 | | |
 |---|---|
-| **Live URL** | _[Add Vercel URL after deploy]_ |
+| **Live URL** | https://atomquest-wine.vercel.app/ |
+| **GitHub** | https://github.com/Naiv-g/atomquest |
 | **Employee Login** | `employee@atomquest.in` / `demo123` |
 | **Manager Login** | `manager@atomquest.in` / `demo123` |
 | **Admin Login** | `admin@atomquest.in` / `demo123` |
