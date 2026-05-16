@@ -85,7 +85,7 @@ export default function AdminAnalyticsPage() {
             <XAxis dataKey="quarter" stroke="#64748b" fontSize={12} />
             <YAxis domain={[0, 100]} stroke="#64748b" fontSize={12} tickFormatter={v => `${v}%`} />
             <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
-              formatter={(v: number) => [`${v}%`]} />
+              formatter={(v: unknown) => [`${v}%`]} />
             <Line type="monotone" dataKey="Org Score" stroke="#6366f1" strokeWidth={2.5}
               dot={{ r: 5, fill: '#6366f1' }} activeDot={{ r: 7 }} />
           </LineChart>
@@ -112,7 +112,7 @@ export default function AdminAnalyticsPage() {
           <h3 style={{ fontWeight: 700, marginBottom: '1rem', fontSize: '0.9375rem' }}>Goal Distribution by Thrust Area</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
-              <Pie data={thrustData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`} labelLine={false}>
+              <Pie data={thrustData} cx="50%" cy="50%" outerRadius={80} dataKey="value" label={({ name, percent }) => `${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false}>
                 {thrustData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Pie>
               <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#f1f5f9' }} />

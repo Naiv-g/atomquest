@@ -290,8 +290,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const auditEntries: AuditEntry[] = [];
       if (actor) {
         Object.keys(updates).forEach((field) => {
-          const oldVal = String((g as Record<string, unknown>)[field] ?? '');
-          const newVal = String((updates as Record<string, unknown>)[field] ?? '');
+          const oldVal = String((g as unknown as Record<string, unknown>)[field] ?? '');
+          const newVal = String((updates as unknown as Record<string, unknown>)[field] ?? '');
           if (oldVal !== newVal) {
             auditEntries.push({
               id: generateId(), goalId: id, userId: actor.id, userName: actor.name,

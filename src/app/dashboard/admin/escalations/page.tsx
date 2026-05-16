@@ -2,7 +2,7 @@
 
 import { useApp } from '@/contexts/AppContext';
 import toast from 'react-hot-toast';
-import { AlertTriangle, Toggle3Left, Save } from 'lucide-react';
+import { AlertTriangle, ToggleLeft, Save } from 'lucide-react';
 import { EscalationRule } from '@/lib/types';
 
 const TRIGGER_LABELS: Record<string, string> = {

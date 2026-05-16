@@ -71,7 +71,7 @@ export default function EmployeeProgressPage() {
                 <YAxis domain={[0, 100]} stroke="#64748b" fontSize={12} tickFormatter={v => `${v}%`} />
                 <Tooltip
                   contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
-                  formatter={(v: number) => [`${v}%`, 'Score']}
+                  formatter={(v: unknown) => [`${v}%`, 'Score']}
                 />
                 <Line type="monotone" dataKey="score" stroke="#6366f1" strokeWidth={2.5}
                   dot={{ r: 5, fill: '#6366f1', strokeWidth: 2 }} activeDot={{ r: 7 }} />
@@ -104,7 +104,7 @@ export default function EmployeeProgressPage() {
                   <YAxis type="category" dataKey="name" stroke="#64748b" fontSize={10} width={100} />
                   <Tooltip
                     contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '8px', color: '#f1f5f9' }}
-                    formatter={(v: number) => [`${v}%`, 'Score']}
+                    formatter={(v: unknown) => [`${v}%`, 'Score']}
                   />
                   <Bar dataKey="q1" fill="#6366f1" radius={[0, 4, 4, 0]} />
                 </BarChart>
