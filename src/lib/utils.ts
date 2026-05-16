@@ -6,8 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// ─── Score Computation ────────────────────────────────────────────────────────
-
 export function computeScore(
   uomType: UoMType,
   target: number | string,
@@ -16,33 +14,36 @@ export function computeScore(
   if (uomType === 'zero') {
     return Number(actual) === 0 ? 100 : 0;
   }
+
   if (uomType === 'timeline') {
-    // actual and target are ISO date strings
     const targetDate = new Date(target as string).getTime();
     const actualDate = new Date(actual as string).getTime();
     if (actualDate <= targetDate) return 100;
     const diff = actualDate - targetDate;
-    const totalDays = 90 * 24 * 60 * 60 * 1000; // penalise over 90 days
-    return Math.max(0, Math.round(100 - (diff / totalDays) * 100));
+    const penaltyWindow = 90 * 24 * 60 * 60 * 1000;
+    return Math.max(0, Math.round(100 - (diff / penaltyWindow) * 100));
   }
+
   const t = Number(target);
   const a = Number(actual);
   if (t === 0) return 0;
+
   if (uomType === 'min') {
-    return Math.min(Math.round((a / t) * 100), 150); // cap at 150%
+    return Math.min(Math.round((a / t) * 100), 150);
   }
+
   if (uomType === 'max') {
     if (a === 0) return 0;
     return Math.min(Math.round((t / a) * 100), 150);
   }
+
   return 0;
 }
-
-// ─── Weighted Score ───────────────────────────────────────────────────────────
 
 export function computeWeightedScore(goals: Goal[], quarter: QuarterKey): number {
   let totalWeight = 0;
   let weightedSum = 0;
+
   goals.forEach((g) => {
     const achievement = g.quarterlyAchievements.find((a) => a.quarter === quarter);
     if (achievement) {
@@ -51,11 +52,10 @@ export function computeWeightedScore(goals: Goal[], quarter: QuarterKey): number
       totalWeight += g.weightage;
     }
   });
+
   if (totalWeight === 0) return 0;
   return Math.round((weightedSum / totalWeight) * 100);
 }
-
-// ─── Status helpers ───────────────────────────────────────────────────────────
 
 export function statusColor(status: GoalStatus) {
   switch (status) {
@@ -119,8 +119,6 @@ export function uomLabel(type: UoMType) {
   }
 }
 
-// ─── Date helpers ─────────────────────────────────────────────────────────────
-
 export function formatDate(iso: string) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('en-IN', {
@@ -148,8 +146,6 @@ export function getCurrentQuarter(): QuarterKey {
   return 'Q4';
 }
 
-// ─── Validation ───────────────────────────────────────────────────────────────
-
 export function validateGoalWeightage(goals: { weightage: number }[]): string | null {
   const total = goals.reduce((sum, g) => sum + g.weightage, 0);
   if (total !== 100) return `Total weightage must be 100%. Current: ${total}%`;
@@ -166,8 +162,6 @@ export function validateMaxGoals(count: number): string | null {
   if (count >= 8) return 'Maximum 8 goals per employee';
   return null;
 }
-
-// ─── Excel Export ─────────────────────────────────────────────────────────────
 
 export async function exportToExcel(data: Record<string, unknown>[], filename: string) {
   const XLSX = await import('xlsx');

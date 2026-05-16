@@ -7,7 +7,7 @@ import {
 } from '@/lib/types';
 import { generateId, computeScore } from '@/lib/utils';
 
-// ─── Seed Data ────────────────────────────────────────────────────────────────
+// Seed users, goals, cycle config, and escalation rules used for the demo
 
 const SEED_USERS: User[] = [
   {
@@ -147,7 +147,7 @@ const SEED_ESCALATION_RULES: EscalationRule[] = [
   { id: 'esc-003', name: 'Missed Check-in', trigger: 'no_checkin', daysThreshold: 10, isActive: true },
 ];
 
-// ─── Context ──────────────────────────────────────────────────────────────────
+// Context interface — defines all state and actions available to components
 
 interface AppContextType {
   // Auth
@@ -192,7 +192,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | null>(null);
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
+// Provider component — wraps the app and manages all shared state
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -203,7 +203,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [escalationRules, setEscalationRules] = useState<EscalationRule[]>(SEED_ESCALATION_RULES);
   const [escalationLogs, setEscalationLogs] = useState<EscalationLog[]>([]);
 
-  // Load from localStorage
+  // Load persisted state from localStorage on first render
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem('aq_user');
@@ -223,7 +223,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Persist goals
+  // Keep localStorage in sync with state changes
   useEffect(() => {
     if (goals.length > 0) localStorage.setItem('aq_goals', JSON.stringify(goals));
   }, [goals]);
@@ -237,7 +237,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('aq_notifications', JSON.stringify(notifications));
   }, [notifications]);
 
-  // Active quarter
+  // Determine which quarter's check-in window is currently open
   const activeQuarter = cycle.checkInWindows.find((w) => w.isActive)?.quarter ?? null;
 
   // Auth
@@ -274,7 +274,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }, []);
 
-  // Goals CRUD
+  // Goal CRUD operations
   const createGoal = useCallback((g: Omit<Goal, 'id' | 'createdAt' | 'quarterlyAchievements' | 'checkInComments' | 'auditLog'>): Goal => {
     const newGoal: Goal = {
       ...g, id: generateId(), createdAt: new Date().toISOString(),
@@ -365,7 +365,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const existing = g.quarterlyAchievements.filter((a) => a.quarter !== quarter);
       return { ...g, goalStatus: status, quarterlyAchievements: [...existing, achievement] };
     }));
-    // sync shared goals
+    // If this is a shared parent goal, sync achievement to all linked children
     if (goal.sharedTo?.length) {
       goal.sharedTo.forEach((empId) => {
         const sharedGoal = goals.find((g) => g.sharedFrom === goalId && g.employeeId === empId);
